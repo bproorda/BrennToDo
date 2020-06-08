@@ -30,7 +30,7 @@ namespace BrennToDo.Controllers
         }
 
         // GET: api/ToDoes/5
-        [HttpGet("{id}")]
+        [HttpGet("ById/{id}")]
         public async Task<ActionResult<ToDo>> GetToDoById(long id)
         {
             var toDo = await toDoRepository.GetToDoById(id);
@@ -42,6 +42,20 @@ namespace BrennToDo.Controllers
 
             return toDo;
         }
+
+        [HttpGet("{assignee}")]
+        public async Task<ActionResult<IEnumerable<ToDo>>> GetToDoByAssignee(string assignee)
+        {
+            var toDo = Ok(await toDoRepository.GetToDoByAssignee(assignee));
+
+            if (toDo == null)
+            {
+                return NotFound();
+            }
+
+            return toDo;
+        }
+
         /*
         // PUT: api/ToDoes/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
@@ -103,6 +117,6 @@ namespace BrennToDo.Controllers
             return toDo;
         }
         */
-    
+
     }
 }
