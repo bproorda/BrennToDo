@@ -26,7 +26,7 @@ namespace BrennToDo.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ToDo>>> GetToDo()
         {
-            return Ok(await toDoRepository.GetAllToDoes());
+            return Ok(await toDoRepository.GetAllToDos());
         }
 
         /*// GET: api/ToDoes/5
