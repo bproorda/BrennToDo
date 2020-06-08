@@ -13,5 +13,6 @@ namespace BrennToDo.Repositories.ToDoRepositories
         Task<ToDo> GetOneToDo(string assignee, long id);
         Task<bool> UpdateToDo(string assignee, long id, object todo);
         Task<ToDo> SaveNewTodo(string assignee, CreateToDo toDo);
+        Task<ToDo> DeleteToDo(string assignee, long id);
     }
 }

@@ -102,23 +102,20 @@ namespace BrennToDo.Controllers
             return CreatedAtAction("GetToDoById", new { id = toDo.Id }, toDo);
         }
 
-        /*
+        
         // DELETE: api/ToDoes/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<ToDo>> DeleteToDo(long id)
+        [HttpDelete("{assignee}/{id}")]
+        public async Task<ActionResult<ToDo>> DeleteToDo(string assignee, long id)
         {
-            var toDo = await toDoRepository.FindAsync(id);
+            var toDo = await toDoRepository.DeleteToDo(assignee, id);
             if (toDo == null)
             {
                 return NotFound();
             }
 
-            toDoRepository.Remove(toDo);
-            await toDoRepository.SaveChangesAsync();
-
             return toDo;
         }
-        */
+        
 
     }
 }

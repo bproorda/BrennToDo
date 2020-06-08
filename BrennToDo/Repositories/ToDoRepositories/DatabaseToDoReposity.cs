@@ -18,6 +18,23 @@ namespace BrennToDo.Repositories.ToDoRepositories
             this._context = context;
         }
 
+        public async Task<ToDo> DeleteToDo(string assignee, long id)
+        {
+            var todo = await _context.ToDo.FindAsync(id);
+            if (todo == null)
+            {
+                return null;
+            }
+
+            var toDoToReturn = await GetOneToDo( assignee, id);
+
+            _context.Remove(todo);
+
+            await _context.SaveChangesAsync();
+
+            return toDoToReturn;
+        }
+
         public async Task<IEnumerable<ToDo>> GetAllToDos()
         {
             var toDoS = await _context.ToDo
