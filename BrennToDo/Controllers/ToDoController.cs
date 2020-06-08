@@ -17,7 +17,7 @@ namespace BrennToDo.Controllers
     {
         IToDoRepository toDoRepository;
 
-       public ToDoController(IToDoRepository toDoRepository)
+        public ToDoController(IToDoRepository toDoRepository)
         {
             this.toDoRepository = toDoRepository;
         }
@@ -69,7 +69,7 @@ namespace BrennToDo.Controllers
             return toDo;
         }
 
-        
+
         // PUT: api/ToDoes/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
@@ -90,19 +90,19 @@ namespace BrennToDo.Controllers
 
             return NoContent();
         }
-        /*
+
         // POST: api/ToDoes
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost]
-        public async Task<ActionResult<ToDo>> PostToDo(ToDo toDo)
+        [HttpPost("{assignee}")]
+        public async Task<ActionResult<ToDo>> PostToDo(string assignee, CreateToDo toDo)
         {
-            toDoRepository.Add(toDo);
-            await toDoRepository.SaveChangesAsync();
+            await toDoRepository.SaveNewTodo(assignee, toDo);
 
-            return CreatedAtAction("GetToDo", new { id = toDo.Id }, toDo);
+            return CreatedAtAction("GetToDoById", new { id = toDo.Id }, toDo);
         }
 
+        /*
         // DELETE: api/ToDoes/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<ToDo>> DeleteToDo(long id)
