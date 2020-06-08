@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BrennToDo.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +14,19 @@ namespace BrennToDo.Data
 
         }
 
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ToDo>()
+                .HasData(
+                new ToDo
+                {
+                    Title = "Walk The Dog",
+                    Assignee = "Brenn",
+                    Difficulty = 3,
+                    DueDate = new DateTime(7, 10, 2020)
+                }
+                );
+        }
     }
 }
