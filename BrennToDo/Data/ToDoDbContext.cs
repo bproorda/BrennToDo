@@ -29,5 +29,8 @@ namespace BrennToDo.Data
                 }
                 );
         }
+
+
+        public DbSet<BrennToDo.Models.ToDo> ToDo { get; set; }
     }
 }
