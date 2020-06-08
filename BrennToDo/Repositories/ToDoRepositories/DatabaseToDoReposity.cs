@@ -34,6 +34,24 @@ namespace BrennToDo.Repositories.ToDoRepositories
             return toDoS;
         }
 
+        public async Task<ToDo> GetOneToDo(string assignee, long id)
+        {
+            var toDo = await _context.ToDo
+                .Where(todo => todo.Assignee == assignee)
+                .Where(todo => todo.Id == id)
+                .Select(todo => new ToDo
+                    {
+                        Id = todo.Id,
+                        Title = todo.Title,
+                        Assignee = todo.Assignee,
+                        DueDate = todo.DueDate,
+                        Difficulty = todo.Difficulty
+                    }
+                    ).FirstOrDefaultAsync();
+
+            return toDo;
+        }
+
         public async Task<IEnumerable<ToDo>> GetToDoByAssignee(string assignee)
         {
             var toDoS = await _context.ToDo

@@ -56,6 +56,19 @@ namespace BrennToDo.Controllers
             return toDo;
         }
 
+        [HttpGet("{assignee}/{id}")]
+        public async Task<ActionResult<ToDo>> GetOneToDo(string assignee, long id)
+        {
+            var toDo = await toDoRepository.GetOneToDo(assignee, id);
+
+            if (toDo == null)
+            {
+                return NotFound();
+            }
+
+            return toDo;
+        }
+
         /*
         // PUT: api/ToDoes/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for

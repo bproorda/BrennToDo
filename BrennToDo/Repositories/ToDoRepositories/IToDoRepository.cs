@@ -10,5 +10,6 @@ namespace BrennToDo.Repositories.ToDoRepositories
         Task<IEnumerable<ToDo>> GetAllToDos();
         Task<ToDo> GetToDoById(long id);
         Task<IEnumerable<ToDo>> GetToDoByAssignee(string assignee);
+        Task<ToDo> GetOneToDo(string assignee, long id);
     }
 }
