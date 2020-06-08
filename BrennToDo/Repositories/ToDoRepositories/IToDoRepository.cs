@@ -7,5 +7,6 @@ namespace BrennToDo.Repositories.ToDoRepositories
 {
     public interface IToDoRepository
     {
+        Task<object> GetAllToDoes();
     }
 }

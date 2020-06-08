@@ -13,11 +13,11 @@ namespace BrennToDo.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ToDoesController : ControllerBase
+    public class ToDoController : ControllerBase
     {
         IToDoRepository toDoRepository;
 
-       public ToDoesController(IToDoRepository toDoRepository)
+       public ToDoController(IToDoRepository toDoRepository)
         {
             this.toDoRepository = toDoRepository;
         }
@@ -26,7 +26,7 @@ namespace BrennToDo.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ToDo>>> GetToDo()
         {
-            return await toDoRepository.ToListAsync();
+            return Ok(await toDoRepository.GetAllToDoes());
         }
 
         /*// GET: api/ToDoes/5
