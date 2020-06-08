@@ -69,39 +69,28 @@ namespace BrennToDo.Controllers
             return toDo;
         }
 
-        /*
+        
         // PUT: api/ToDoes/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutToDo(long id, ToDo toDo)
+        [HttpPut("{assignee}/{id}")]
+        public async Task<IActionResult> PutToDo(string assignee, long id, ToDo toDo)
         {
             if (id != toDo.Id)
             {
                 return BadRequest();
             }
 
-            toDoRepository.Entry(toDo).State = EntityState.Modified;
+            bool didUpdate = await toDoRepository.UpdateToDo(assignee, id, todo);
 
-            try
+            if (!didUpdate)
             {
-                await toDoRepository.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ToDoExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
             }
 
             return NoContent();
         }
-
+        /*
         // POST: api/ToDoes
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.

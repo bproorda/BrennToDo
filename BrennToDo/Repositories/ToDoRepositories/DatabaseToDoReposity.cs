@@ -87,6 +87,29 @@ namespace BrennToDo.Repositories.ToDoRepositories
             return toDo;
         }
 
+        public async Task<bool> UpdateToDo(string assignee, long id, object todo)
+        {
+            _context.Entry(todo).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ToDoExistss(id))
+                {
+                    return false;
+                }
+                else
+                {
+                    throw;
+                }
+
+            }
+        }
+
         private bool ToDoExists(long id)
         {
             return _context.ToDo.Any(e => e.Id == id);
