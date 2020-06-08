@@ -103,9 +103,6 @@ namespace BrennToDo.Controllers
             return toDo;
         }
         */
-        private bool ToDoExists(long id)
-        {
-            return toDoRepository.Any(e => e.Id == id);
-        }
+    
     }
 }
