@@ -33,6 +33,25 @@ namespace BrennToDo.Repositories.ToDoRepositories
 
             return toDoS;
         }
+
+        public async Task<ToDo> GetToDoById(long id)
+        {
+
+            var toDo = await _context.ToDo
+            .Where(todo => todo.Id == id)
+            .Select(todo => new ToDo
+            {
+                Id = todo.Id,
+                Title = todo.Title,
+                Assignee = todo.Assignee,
+                DueDate = todo.DueDate,
+                Difficulty = todo.Difficulty
+            }
+            ).FirstOrDefaultAsync();
+
+            return toDo;
+        }
+
         private bool ToDoExists(long id)
         {
             return _context.ToDo.Any(e => e.Id == id);

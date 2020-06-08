@@ -29,11 +29,11 @@ namespace BrennToDo.Controllers
             return Ok(await toDoRepository.GetAllToDos());
         }
 
-        /*// GET: api/ToDoes/5
+        // GET: api/ToDoes/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ToDo>> GetToDo(long id)
+        public async Task<ActionResult<ToDo>> GetToDoById(long id)
         {
-            var toDo = await toDoRepository.FindAsync(id);
+            var toDo = await toDoRepository.GetToDoById(id);
 
             if (toDo == null)
             {
@@ -42,7 +42,7 @@ namespace BrennToDo.Controllers
 
             return toDo;
         }
-
+        /*
         // PUT: api/ToDoes/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.

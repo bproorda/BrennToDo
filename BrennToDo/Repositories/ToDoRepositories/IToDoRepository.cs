@@ -8,5 +8,6 @@ namespace BrennToDo.Repositories.ToDoRepositories
     public interface IToDoRepository
     {
         Task<IEnumerable<ToDo>> GetAllToDos();
+        Task<ToDo> GetToDoById(long id);
     }
 }
