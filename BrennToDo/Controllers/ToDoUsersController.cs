@@ -28,6 +28,28 @@ namespace BrennToDo.Controllers
             this.userManager = userManager;
             this.configuration = configuration;
         }
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login(LoginData data)
+        {
+            var user = await userManager.FindByNameAsync(data.Username);
+
+            if (user != null)
+            {
+                var passed = await userManager.CheckPasswordAsync(user, data.Password);
+
+                if (passed)
+                {
+                    return Ok(new UserAndToken
+                    {
+                        UserId = user.Id,
+                        Token = CreateToken(user)
+                    });
+                }
+
+                await userManager.AccessFailedAsync(user);
+            }
+            return Unauthorized();
+        }
 
         [HttpPost("Register")]
         public async Task<ActionResult>  Register(RegisterData data)
