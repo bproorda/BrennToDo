@@ -35,6 +35,11 @@ namespace BrennToDo
                 string connectionString = Configuration.GetConnectionString("DefaultConnection");
                 options.UseSqlServer(connectionString);
             });
+            services.AddDbContext<UserDbContext>(options =>
+            {
+                //Install-Package Microsoft.EntityFrameworkCore.SqlServer
+                options.UseSqlServer(Configuration.GetConnectionString("UsersConnection"));
+            });
 
             services.AddTransient<IToDoRepository, DatabaseToDoReposity>();
         }
