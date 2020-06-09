@@ -1,12 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using BrennToDo.Models;
 using BrennToDo.Models.Identity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using static BrennToDo.Models.Identity.UserWithToken;
 
 namespace BrennToDo.Controllers
 {
@@ -15,10 +21,12 @@ namespace BrennToDo.Controllers
     public class ToDoUsersController : ControllerBase
     {
         private readonly UserManager<ToDoUser> userManager;
+        private readonly IConfiguration configuration;
 
-        public ToDoUsersController(UserManager<ToDoUser> userManager)
+        public ToDoUsersController(UserManager<ToDoUser> userManager, IConfiguration configuration)
         {
             this.userManager = userManager;
+            this.configuration = configuration;
         }
 
         [HttpPost("Register")]
@@ -42,11 +50,32 @@ namespace BrennToDo.Controllers
                 });
             }
 
-            return Ok(new UserWithToken
+            return Ok(new UserAndToken
             {
-                UserId = user.Id,
-                Token = userManager.CreateToken(user),
+                UserId = newUser.Id,
+                //Token = userManager.CreateToken(newUser),
+                Token = CreateToken(newUser)
             });
         }
+        private string /*JwtSecurityToken*/ CreateToken(ToDoUser newUser)
+        {
+            var secret = configuration["JWT:Secret"];
+            var secretBytes = Encoding.UTF8.GetBytes(secret);
+            var signingKey = new SymmetricSecurityKey(secretBytes);
+            var tokenClaims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, newUser.UserName),
+                new Claim("UserId", newUser.Id),
+                new Claim("FullName", $"{newUser.FirstName} {newUser.LastName}"),
+            };
+            var token = new JwtSecurityToken(
+                claims: tokenClaims,
+                signingCredentials: new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256)
+                );
+
+            var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+            return tokenString;
+        }
+
     }
 }
