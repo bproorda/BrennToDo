@@ -81,7 +81,7 @@ namespace BrennToDo.Controllers
                 return BadRequest();
             }
 
-            bool didUpdate = await toDoRepository.UpdateToDo(assignee, id, todo);
+            bool didUpdate = await toDoRepository.UpdateToDo(assignee, id, toDo);
 
             if (!didUpdate)
             {

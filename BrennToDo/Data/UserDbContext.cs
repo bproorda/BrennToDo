@@ -12,6 +12,18 @@ namespace BrennToDo.Data
     {
         public UserDbContext(DbContextOptions options) : base(options)
         {
+
+        }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            builder.Entity<ToDoUser>()
+                .HasData( new ToDoUser
+                {
+                    FirstName = "Brenn", LastName = "Roorda", Email = "bproorda@gmail.com", EmailConfirmed = true, Id = "bproorda", UserName = "bproorda"
+                });
         }
     }
 }

@@ -38,7 +38,7 @@ namespace BrennToDo
             services.AddDbContext<UserDbContext>(options =>
             {
                 //Install-Package Microsoft.EntityFrameworkCore.SqlServer
-                options.UseSqlServer(Configuration.GetConnectionString("UsersConnection"));
+                options.UseSqlServer(Configuration.GetConnectionString("UserConnection"));
             });
 
             services.AddTransient<IToDoRepository, DatabaseToDoReposity>();
