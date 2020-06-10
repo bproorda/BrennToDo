@@ -56,12 +56,7 @@ namespace BrennToDo.Controllers
             }    
         }
 
-        /* [HttpGet]
-         public async Task<ActionResult<IEnumerable<ToDo>>> GetToDo()
-         {
-             return Ok(await toDoRepository.GetAllToDos());
-         }*/
-
+     
         // GET: api/ToDoes/5
         [HttpGet("ById/{id}")]
         public async Task<ActionResult<ToDo>> GetToDoById(long id)
@@ -130,14 +125,25 @@ namespace BrennToDo.Controllers
 
 
         //Refactoring to require a logged in user to post
-       /* [Authorize]
+        [Authorize]
         [HttpPost]
-        public async Task<ActionResult<ToDo>> PostToDo([FromBody], CreateToDo toDo)
+        public async Task<ActionResult<ToDo>> PostToDo([FromBody] ToDo toDo)
         {
-            await toDoRepository.SaveNewTodo(assignee, toDo);
+            if (CheckLogin())
+            {
 
-            return CreatedAtAction("GetToDoById", new { id = toDo.Id }, toDo);
-        }*/
+                toDo.CreatedByUserId = GetUserId();
+                await toDoRepository.SaveNewTodo(toDo);
+
+                return CreatedAtAction("GetToDoById", new { id = toDo.Id }, toDo); 
+            } else
+            {
+                return BadRequest(new
+                {
+                    message = "Unknown user! Please Login!",
+                });
+            }
+        }
 
         
         // DELETE: api/ToDoes/5

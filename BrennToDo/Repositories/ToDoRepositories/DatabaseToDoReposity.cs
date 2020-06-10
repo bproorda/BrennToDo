@@ -129,21 +129,13 @@ namespace BrennToDo.Repositories.ToDoRepositories
             return toDo;
         }
 
-        public async Task<ToDo> SaveNewTodo(string assignee, CreateToDo toDo)
+        public async Task<ToDo> SaveNewTodo(ToDo toDo)
         {
-            var newTodo = new ToDo
-            {
-                Id = toDo.Id,
-                Assignee = toDo.Assignee,
-                Title = toDo.Title,
-                Difficulty = toDo.Difficulty,
-                DueDate = toDo.DueDate
-            };
-
-            _context.Add(newTodo);
+          
+            _context.Add(toDo);
             await _context.SaveChangesAsync();
 
-            return newTodo;
+            return toDo;
         }
 
         public async Task<bool> UpdateToDo(string assignee, long id, object todo)
