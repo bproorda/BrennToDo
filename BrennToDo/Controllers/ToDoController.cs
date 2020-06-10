@@ -107,14 +107,14 @@ namespace BrennToDo.Controllers
 
 
         //Refactoring to require a logged in user to post
-        [Authorize]
+       /* [Authorize]
         [HttpPost]
         public async Task<ActionResult<ToDo>> PostToDo([FromBody], CreateToDo toDo)
         {
             await toDoRepository.SaveNewTodo(assignee, toDo);
 
             return CreatedAtAction("GetToDoById", new { id = toDo.Id }, toDo);
-        }
+        }*/
 
         
         // DELETE: api/ToDoes/5
