@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BrennToDo.Models;
 using BrennToDo.Models.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -28,6 +29,35 @@ namespace BrennToDo.Controllers
             this.userManager = userManager;
             this.configuration = configuration;
         }
+
+        [Authorize]
+        [HttpGet("Self")]
+        public async Task<IActionResult> Self()
+        {
+            if (HttpContext.User.Identity is ClaimsIdentity identity)
+            {
+                var usernameClaim = identity.FindFirst("UserId");
+                var userId = usernameClaim.Value;
+
+                var user = await userManager.FindByIdAsync(userId);
+                if (user == null)
+                {
+                    return Unauthorized();
+                }
+
+                return Ok(new
+                {
+                    UserId = user.Id,
+                    user.Email,
+                    user.FirstName,
+                    user.LastName
+                });
+            }
+
+            return Unauthorized();
+        }
+
+
         [HttpPost("Login")]
         public async Task<IActionResult> Login(LoginData data)
         {
