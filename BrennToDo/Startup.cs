@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BrennToDo.Data;
+using BrennToDo.Models;
 using BrennToDo.Repositories.ToDoRepositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -42,6 +44,10 @@ namespace BrennToDo
             });
 
             services.AddTransient<IToDoRepository, DatabaseToDoReposity>();
+
+            services.AddIdentity<ToDoUser, IdentityRole>()
+             .AddEntityFrameworkStores<UserDbContext>()
+             ;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

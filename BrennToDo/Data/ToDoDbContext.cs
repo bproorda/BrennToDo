@@ -9,7 +9,7 @@ namespace BrennToDo.Data
 {
     public class ToDoDbContext : DbContext
     {
-        public ToDoDbContext(DbContextOptions options) : base(options)
+        public ToDoDbContext(DbContextOptions<ToDoDbContext> options) : base(options)
         {
 
         }

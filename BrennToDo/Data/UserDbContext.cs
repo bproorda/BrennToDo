@@ -22,8 +22,11 @@ namespace BrennToDo.Data
             builder.Entity<ToDoUser>()
                 .HasData( new ToDoUser
                 {
-                    FirstName = "Brenn", LastName = "Roorda", Email = "bproorda@gmail.com", EmailConfirmed = true, Id = "bproorda", UserName = "bproorda"
+                    FirstName = "Brenn", LastName = "Roorda", 
+                    Email = "bproorda@gmail.com", EmailConfirmed = true, 
+                    Id = "bproorda", UserName = "bproorda"
                 });
         }
+
     }
 }
