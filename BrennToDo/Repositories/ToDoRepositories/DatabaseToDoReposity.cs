@@ -1,5 +1,6 @@
 ﻿using BrennToDo.Data;
 using BrennToDo.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -13,10 +14,12 @@ namespace BrennToDo.Repositories.ToDoRepositories
     {
 
         private ToDoDbContext _context;
+        private UserManager<ToDoUser> userManager;
 
-        public DatabaseToDoReposity(ToDoDbContext context)
+        public DatabaseToDoReposity(ToDoDbContext context, UserManager<ToDoUser> userManager)
         {
             this._context = context;
+            this.userManager = userManager;
         }
 
         public async Task<ToDo> DeleteToDo(string assignee, long id)
@@ -36,11 +39,25 @@ namespace BrennToDo.Repositories.ToDoRepositories
             return toDoToReturn;
         }
 
-        public async Task<ActionResult<IEnumerable<ToDo>>> GetAllToDoByUser(string userId)
+        public async Task<ActionResult<IEnumerable<ToDoDTO>>> GetAllToDoByUser(string userId)
         {
-            return  await _context.ToDo
+
+            var user = await userManager.FindByIdAsync(userId);
+
+            var todos = await _context.ToDo
                 .Where(td => td.CreatedByUserId != null && td.CreatedByUserId == userId)
+                .Select(td => new ToDoDTO
+                {
+                    Title = td.Title,
+                    Assignee = td.Assignee,
+                    DueDate = td.DueDate,
+                    Difficulty = td.Difficulty,
+                    CreatedBy = user == null ? null : $"{user.FirstName} {user.LastName}"
+
+                })
                 .ToListAsync();
+
+            return todos;
         }
 
         public async Task<IEnumerable<ToDo>> GetAllToDos()

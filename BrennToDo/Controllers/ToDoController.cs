@@ -28,7 +28,7 @@ namespace BrennToDo.Controllers
 
         // GET: api/ToDo
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ToDo>>> GetToDo()
+        public async Task<ActionResult<IEnumerable<ToDoDTO>>> GetToDo()
         {
             return await toDoRepository.GetAllToDoByUser(GetUserId());
         }
