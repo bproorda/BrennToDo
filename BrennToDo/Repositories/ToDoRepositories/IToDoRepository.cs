@@ -1,4 +1,5 @@
 ﻿using BrennToDo.Models;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,5 +15,6 @@ namespace BrennToDo.Repositories.ToDoRepositories
         Task<bool> UpdateToDo(string assignee, long id, object todo);
         Task<ToDo> SaveNewTodo(string assignee, CreateToDo toDo);
         Task<ToDo> DeleteToDo(string assignee, long id);
+        Task<ActionResult<IEnumerable<ToDo>>> GetAllToDoByUser(string userId);
     }
 }

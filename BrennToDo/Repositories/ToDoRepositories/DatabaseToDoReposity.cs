@@ -1,5 +1,6 @@
 ﻿using BrennToDo.Data;
 using BrennToDo.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -33,6 +34,13 @@ namespace BrennToDo.Repositories.ToDoRepositories
             await _context.SaveChangesAsync();
 
             return toDoToReturn;
+        }
+
+        public async Task<ActionResult<IEnumerable<ToDo>>> GetAllToDoByUser(string userId)
+        {
+            return  await _context.ToDo
+                .Where(td => td.CreatedByUserId != null && td.CreatedByUserId == userId)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<ToDo>> GetAllToDos()
