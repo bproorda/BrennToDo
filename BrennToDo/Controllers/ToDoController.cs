@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using BrennToDo.Data;
 using BrennToDo.Models;
 using BrennToDo.Repositories.ToDoRepositories;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BrennToDo.Controllers
 {
@@ -17,12 +18,14 @@ namespace BrennToDo.Controllers
     {
         IToDoRepository toDoRepository;
 
+        public object ClaimType { get; private set; }
+
         public ToDoController(IToDoRepository toDoRepository)
         {
             this.toDoRepository = toDoRepository;
         }
 
-        // GET: api/ToDoes
+        // GET: api/ToDo
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ToDo>>> GetToDo()
         {
@@ -91,11 +94,15 @@ namespace BrennToDo.Controllers
             return NoContent();
         }
 
-        // POST: api/ToDoes
+        // POST: api/ToDo
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost("{assignee}")]
-        public async Task<ActionResult<ToDo>> PostToDo(string assignee, CreateToDo toDo)
+
+
+        //Refactoring to require a logged in user to post
+        [Authorize]
+        [HttpPost]
+        public async Task<ActionResult<ToDo>> PostToDo([FromBody], CreateToDo toDo)
         {
             await toDoRepository.SaveNewTodo(assignee, toDo);
 
