@@ -9,6 +9,7 @@ using BrennToDo.Data;
 using BrennToDo.Models;
 using BrennToDo.Repositories.ToDoRepositories;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace BrennToDo.Controllers
 {
@@ -122,7 +123,12 @@ namespace BrennToDo.Controllers
 
             return toDo;
         }
-        
+
+        private string GetUserId()
+        {
+            return ((ClaimsIdentity)User.Identity).FindFirst("UserId")?.Value;
+        }
+
 
     }
 }
