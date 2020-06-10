@@ -30,7 +30,28 @@ namespace BrennToDo.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ToDoDTO>>> GetToDo()
         {
-            return await toDoRepository.GetAllToDoByUser(GetUserId());
+            if (HttpContext.User.Identity is ClaimsIdentity identity)
+            {
+                var usernameClaim = identity.FindFirst("UserId");
+                //var userId = usernameClaim.Value;
+
+                //var user = await userManager.FindByIdAsync(userId);
+                if (usernameClaim != null)
+                {
+                    return await toDoRepository.GetAllToDoByUser(GetUserId());
+                }
+                else
+                {
+                    return BadRequest(new
+                    {
+                        message = "Unknown user! Please Login!",
+                    });
+                }
+            }
+            else
+            {
+                return Unauthorized();
+            }
         }
 
        /* [HttpGet]
