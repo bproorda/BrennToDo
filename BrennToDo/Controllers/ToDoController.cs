@@ -30,13 +30,7 @@ namespace BrennToDo.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ToDoDTO>>> GetToDo()
         {
-            if (HttpContext.User.Identity is ClaimsIdentity identity)
-            {
-                var usernameClaim = identity.FindFirst("UserId");
-                //var userId = usernameClaim.Value;
-
-                //var user = await userManager.FindByIdAsync(userId);
-                if (usernameClaim != null)
+                if (CheckLogin())
                 {
                     return await toDoRepository.GetAllToDoByUser(GetUserId());
                 }
@@ -47,18 +41,26 @@ namespace BrennToDo.Controllers
                         message = "Unknown user! Please Login!",
                     });
                 }
+          
+        }
+
+        private bool CheckLogin()
+        {
+            if (HttpContext.User.Identity is ClaimsIdentity identity && identity.FindFirst("UserId") != null)
+            {
+                return true;
             }
             else
             {
-                return Unauthorized();
-            }
+                return false;
+            }    
         }
 
-       /* [HttpGet]
-        public async Task<ActionResult<IEnumerable<ToDo>>> GetToDo()
-        {
-            return Ok(await toDoRepository.GetAllToDos());
-        }*/
+        /* [HttpGet]
+         public async Task<ActionResult<IEnumerable<ToDo>>> GetToDo()
+         {
+             return Ok(await toDoRepository.GetAllToDos());
+         }*/
 
         // GET: api/ToDoes/5
         [HttpGet("ById/{id}")]
