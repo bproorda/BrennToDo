@@ -121,6 +121,7 @@ namespace BrennToDo.Controllers
                 new Claim("FullName", $"{newUser.FirstName} {newUser.LastName}"),
             };
             var token = new JwtSecurityToken(
+                expires: DateTime.UtcNow.AddHours(6),
                 claims: tokenClaims,
                 signingCredentials: new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256)
                 );
