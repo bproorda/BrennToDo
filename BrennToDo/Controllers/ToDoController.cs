@@ -124,10 +124,7 @@ namespace BrennToDo.Controllers
                 return CreatedAtAction("GetToDoById", new { id = toDo.Id }, toDo); 
             } else
             {
-                return BadRequest(new
-                {
-                    message = "Unknown user! Please Login!",
-                });
+             return Unauthorized();
             }
         }
 
