@@ -27,33 +27,20 @@ namespace BrennToDo.Controllers
         }
 
         // GET: api/ToDo
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ToDoDTO>>> GetToDo()
         {
-                if (CheckLogin())
+            
+                if (HttpContext.User.Identity.IsAuthenticated)
                 {
                     return await toDoRepository.GetAllToDoByUser(GetUserId());
                 }
                 else
                 {
-                    return BadRequest(new
-                    {
-                        message = "Unknown user! Please Login!",
-                    });
+                    return Unauthorized();
                 }
           
-        }
-
-        private bool CheckLogin()
-        {
-            if (HttpContext.User.Identity is ClaimsIdentity identity && identity.FindFirst("UserId") != null)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }    
         }
 
      
@@ -129,7 +116,7 @@ namespace BrennToDo.Controllers
         [HttpPost]
         public async Task<ActionResult<ToDo>> PostToDo([FromBody] ToDo toDo)
         {
-            if (CheckLogin())
+            if (HttpContext.User.Identity.IsAuthenticated)
             {
 
                 toDo.CreatedByUserId = GetUserId();
@@ -138,10 +125,7 @@ namespace BrennToDo.Controllers
                 return CreatedAtAction("GetToDoById", new { id = toDo.Id }, toDo); 
             } else
             {
-                return BadRequest(new
-                {
-                    message = "Unknown user! Please Login!",
-                });
+             return Unauthorized();
             }
         }
 

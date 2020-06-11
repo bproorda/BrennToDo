@@ -48,6 +48,7 @@ namespace BrennToDo.Repositories.ToDoRepositories
                 .Where(td => td.CreatedByUserId != null && td.CreatedByUserId == userId)
                 .Select(td => new ToDoDTO
                 {
+                    Id = td.Id,
                     Title = td.Title,
                     Assignee = td.Assignee,
                     DueDate = td.DueDate,
