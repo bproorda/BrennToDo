@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using BrennToDo.Data;
 using BrennToDo.Models;
 using BrennToDo.Repositories.ToDoRepositories;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace BrennToDo.Controllers
 {
@@ -17,18 +19,44 @@ namespace BrennToDo.Controllers
     {
         IToDoRepository toDoRepository;
 
+        public object ClaimType { get; private set; }
+
         public ToDoController(IToDoRepository toDoRepository)
         {
             this.toDoRepository = toDoRepository;
         }
 
-        // GET: api/ToDoes
+        // GET: api/ToDo
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ToDo>>> GetToDo()
+        public async Task<ActionResult<IEnumerable<ToDoDTO>>> GetToDo()
         {
-            return Ok(await toDoRepository.GetAllToDos());
+                if (CheckLogin())
+                {
+                    return await toDoRepository.GetAllToDoByUser(GetUserId());
+                }
+                else
+                {
+                    return BadRequest(new
+                    {
+                        message = "Unknown user! Please Login!",
+                    });
+                }
+          
         }
 
+        private bool CheckLogin()
+        {
+            if (HttpContext.User.Identity is ClaimsIdentity identity && identity.FindFirst("UserId") != null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }    
+        }
+
+     
         // GET: api/ToDoes/5
         [HttpGet("ById/{id}")]
         public async Task<ActionResult<ToDo>> GetToDoById(long id)
@@ -91,15 +119,30 @@ namespace BrennToDo.Controllers
             return NoContent();
         }
 
-        // POST: api/ToDoes
+        // POST: api/ToDo
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost("{assignee}")]
-        public async Task<ActionResult<ToDo>> PostToDo(string assignee, CreateToDo toDo)
-        {
-            await toDoRepository.SaveNewTodo(assignee, toDo);
 
-            return CreatedAtAction("GetToDoById", new { id = toDo.Id }, toDo);
+
+        //Refactoring to require a logged in user to post
+        [Authorize]
+        [HttpPost]
+        public async Task<ActionResult<ToDo>> PostToDo([FromBody] ToDo toDo)
+        {
+            if (CheckLogin())
+            {
+
+                toDo.CreatedByUserId = GetUserId();
+                await toDoRepository.SaveNewTodo(toDo);
+
+                return CreatedAtAction("GetToDoById", new { id = toDo.Id }, toDo); 
+            } else
+            {
+                return BadRequest(new
+                {
+                    message = "Unknown user! Please Login!",
+                });
+            }
         }
 
         
@@ -115,7 +158,12 @@ namespace BrennToDo.Controllers
 
             return toDo;
         }
-        
+
+        private string GetUserId()
+        {
+            return ((ClaimsIdentity)User.Identity).FindFirst("UserId")?.Value;
+        }
+
 
     }
 }

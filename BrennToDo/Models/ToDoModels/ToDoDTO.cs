@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BrennToDo.Models
 {
-    public class ToDo
+    public class ToDoDTO
     {
         public long Id { get; set; }
         public string Title { get; set; }
@@ -15,5 +12,7 @@ namespace BrennToDo.Models
         public string Assignee { get; set; }
 
         public int Difficulty { get; set; }
+
+        public string CreatedBy { get; set; }
     }
 }

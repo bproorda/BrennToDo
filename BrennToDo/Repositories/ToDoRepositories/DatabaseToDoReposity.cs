@@ -1,5 +1,7 @@
 ﻿using BrennToDo.Data;
 using BrennToDo.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,10 +14,12 @@ namespace BrennToDo.Repositories.ToDoRepositories
     {
 
         private ToDoDbContext _context;
+        private UserManager<ToDoUser> userManager;
 
-        public DatabaseToDoReposity(ToDoDbContext context)
+        public DatabaseToDoReposity(ToDoDbContext context, UserManager<ToDoUser> userManager)
         {
             this._context = context;
+            this.userManager = userManager;
         }
 
         public async Task<ToDo> DeleteToDo(string assignee, long id)
@@ -33,6 +37,27 @@ namespace BrennToDo.Repositories.ToDoRepositories
             await _context.SaveChangesAsync();
 
             return toDoToReturn;
+        }
+
+        public async Task<ActionResult<IEnumerable<ToDoDTO>>> GetAllToDoByUser(string userId)
+        {
+
+            var user = await userManager.FindByIdAsync(userId);
+
+            var todos = await _context.ToDo
+                .Where(td => td.CreatedByUserId != null && td.CreatedByUserId == userId)
+                .Select(td => new ToDoDTO
+                {
+                    Title = td.Title,
+                    Assignee = td.Assignee,
+                    DueDate = td.DueDate,
+                    Difficulty = td.Difficulty,
+                    CreatedBy = user == null ? null : $"{user.FirstName} {user.LastName}"
+
+                })
+                .ToListAsync();
+
+            return todos;
         }
 
         public async Task<IEnumerable<ToDo>> GetAllToDos()
@@ -104,21 +129,13 @@ namespace BrennToDo.Repositories.ToDoRepositories
             return toDo;
         }
 
-        public async Task<ToDo> SaveNewTodo(string assignee, CreateToDo toDo)
+        public async Task<ToDo> SaveNewTodo(ToDo toDo)
         {
-            var newTodo = new ToDo
-            {
-                Id = toDo.Id,
-                Assignee = toDo.Assignee,
-                Title = toDo.Title,
-                Difficulty = toDo.Difficulty,
-                DueDate = toDo.DueDate
-            };
-
-            _context.Add(newTodo);
+          
+            _context.Add(toDo);
             await _context.SaveChangesAsync();
 
-            return newTodo;
+            return toDo;
         }
 
         public async Task<bool> UpdateToDo(string assignee, long id, object todo)
