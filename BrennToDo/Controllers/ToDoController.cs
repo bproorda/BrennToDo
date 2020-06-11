@@ -27,6 +27,7 @@ namespace BrennToDo.Controllers
         }
 
         // GET: api/ToDo
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ToDoDTO>>> GetToDo()
         {
@@ -37,7 +38,7 @@ namespace BrennToDo.Controllers
                 }
                 else
                 {
-                return Unauthorized();
+                    return Unauthorized();
                 }
           
         }
