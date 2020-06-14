@@ -78,6 +78,16 @@ namespace BrennToDo
                         ValidateAudience = false,
                     };
                 });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("posts.create",
+                    policy => policy.RequireClaim("permissions", "create"));
+                options.AddPolicy("posts.update",
+                    policy => policy.RequireClaim("permissions", "update"));
+                options.AddPolicy("posts.delete",
+                    policy => policy.RequireClaim("permissions", "delete"));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
