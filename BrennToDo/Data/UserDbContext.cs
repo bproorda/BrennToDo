@@ -44,7 +44,15 @@ namespace BrennToDo.Data
             builder.Entity<IdentityRole>()
                .HasData(admin, editor, user);
 
-
+            builder.Entity<IdentityRoleClaim<string>>()
+               .HasData(
+                   new IdentityRoleClaim<string> { Id = 1, RoleId = "admin", ClaimType = "Permissions", ClaimValue = "delete" },
+                   new IdentityRoleClaim<string> { Id = 2, RoleId = "admin", ClaimType = "Permissions", ClaimValue = "create" },
+                   new IdentityRoleClaim<string> { Id = 3, RoleId = "admin", ClaimType = "Permissions", ClaimValue = "update" },
+                   new IdentityRoleClaim<string> { Id = 4, RoleId = "editor", ClaimType = "Permissions", ClaimValue = "update" },
+                   new IdentityRoleClaim<string> { Id = 5, RoleId = "user", ClaimType = "Permissions", ClaimValue = "create" },
+                   new IdentityRoleClaim<string> { Id = 6, RoleId = "user", ClaimType = "Permissions", ClaimValue = "update" }
+               );
             builder.Entity<ToDoUser>()
                 .HasData( new ToDoUser
                 {
