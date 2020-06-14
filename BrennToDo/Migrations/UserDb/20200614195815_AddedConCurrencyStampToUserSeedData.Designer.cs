@@ -4,14 +4,16 @@ using BrennToDo.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BrennToDo.Migrations.UserDb
 {
     [DbContext(typeof(UserDbContext))]
-    partial class UserDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200614195815_AddedConCurrencyStampToUserSeedData")]
+    partial class AddedConCurrencyStampToUserSeedData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -101,7 +103,7 @@ namespace BrennToDo.Migrations.UserDb
                             LastName = "Roorda",
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "78f42dbd-fc67-4dd8-a83b-61212484e35e",
+                            SecurityStamp = "17413f66-d5fe-413d-a8fd-53c75b1c21e3",
                             TwoFactorEnabled = false,
                             UserName = "bproorda"
                         });

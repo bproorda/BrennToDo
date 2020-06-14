@@ -58,7 +58,8 @@ namespace BrennToDo.Data
                 {
                     FirstName = "Brenn", LastName = "Roorda", 
                     Email = "bproorda@gmail.com", EmailConfirmed = true, 
-                    Id = "bproorda", UserName = "bproorda"
+                    Id = "bproorda", UserName = "bproorda",
+                    ConcurrencyStamp = "79b76ad0-79fc-4d46-952a-c8c15a4adf1d",
                 });
         }
 

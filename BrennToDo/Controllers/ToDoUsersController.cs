@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using static BrennToDo.Models.Identity.UserWithToken;
@@ -44,20 +45,26 @@ namespace BrennToDo.Controllers
                 {
                     return Unauthorized();
                 }
-
+                var roles = await userManager.GetRolesAsync(user);
+                bool userIsUser =  await userManager.IsInRoleAsync(user, "User");
+                bool userIsAdmin = await userManager.IsInRoleAsync(user, "Administrator");
                 return Ok(new
                 {
                     UserId = user.Id,
                     user.Email,
                     user.FirstName,
-                    user.LastName
+                    user.LastName,
+                    userIsUser,
+                    userIsAdmin
+                    
+                    
                 });
             }
 
             return Unauthorized();
         }
 
-
+        
         [HttpPost("Login")]
         public async Task<IActionResult> Login(LoginData data)
         {
@@ -81,6 +88,8 @@ namespace BrennToDo.Controllers
             return Unauthorized();
         }
 
+        [AllowAnonymous]
+        [Authorize]
         [HttpPost("Register")]
         public async Task<ActionResult>  Register(RegisterData data)
         {
@@ -89,7 +98,10 @@ namespace BrennToDo.Controllers
                 UserName = data.UserName,
                 FirstName = data.FirstName,
                 LastName = data.LastName,
-                Email = data.Email
+                Email = data.Email,
+                
+                
+                
             };
             var result = await userManager.CreateAsync(newUser, data.Password);
 
@@ -100,6 +112,13 @@ namespace BrennToDo.Controllers
                     message = "Registration failed",
                     errors = result.Errors,
                 });
+            }
+
+            // If user is an admin OR there aren't any users
+            // Allow register to include Roles
+            if (User.IsInRole("Administrator") || !await userManager.Users.AnyAsync())
+            {
+                await userManager.AddToRolesAsync(newUser, data.Roles);
             }
 
             return Ok(new UserAndToken

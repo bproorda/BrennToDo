@@ -19,5 +19,7 @@ namespace BrennToDo.Models.Identity
         public string FirstName { get; set; }
         [Required]
         public string LastName { get; set; }
+
+        public string[] Roles { get; set; }
     }
 }
