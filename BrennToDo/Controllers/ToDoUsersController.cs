@@ -82,7 +82,7 @@ namespace BrennToDo.Controllers
                         Token = CreateToken(user)
                     });
                 }
-
+               
                 await userManager.AccessFailedAsync(user);
             }
             return Unauthorized();
@@ -147,6 +147,20 @@ namespace BrennToDo.Controllers
 
             var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
             return tokenString;
+        }
+        [HttpPost("{username}")]
+        [Authorize(Roles ="Administrator")]
+        public async Task<ActionResult> AddRoleToUser(string username, string roleId)
+        {
+            var user = await userManager.FindByNameAsync("username");
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var userUpdated = await userManager.AddToRoleAsync(user, roleId);
+
+            return NoContent();
         }
 
       
