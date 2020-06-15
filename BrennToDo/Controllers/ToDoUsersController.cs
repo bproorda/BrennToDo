@@ -24,11 +24,13 @@ namespace BrennToDo.Controllers
     {
         private readonly UserManager<ToDoUser> userManager;
         private readonly IConfiguration configuration;
+        private SignInManager<ToDoUser> signInManager;
 
-        public ToDoUsersController(UserManager<ToDoUser> userManager, IConfiguration configuration)
+        public ToDoUsersController(UserManager<ToDoUser> userManager, SignInManager<ToDoUser> signInManager, IConfiguration configuration)
         {
             this.userManager = userManager;
             this.configuration = configuration;
+            this.signInManager = signInManager; 
         }
 
         [Authorize]
@@ -79,7 +81,7 @@ namespace BrennToDo.Controllers
                     return Ok(new UserAndToken
                     {
                         UserId = user.Id,
-                        Token = CreateToken(user)
+                        Token = await CreateToken(user)
                     });
                 }
                
@@ -125,23 +127,26 @@ namespace BrennToDo.Controllers
             {
                 UserId = newUser.Id,
                 //Token = userManager.CreateToken(newUser),
-                Token = CreateToken(newUser)
+                Token =  await CreateToken(newUser)
             });
         }
-        private string /*JwtSecurityToken*/ CreateToken(ToDoUser newUser)
+        private async Task<string> /*JwtSecurityToken*/ CreateToken(ToDoUser newUser)
         {
             var secret = configuration["JWT:Secret"];
             var secretBytes = Encoding.UTF8.GetBytes(secret);
             var signingKey = new SymmetricSecurityKey(secretBytes);
-            var tokenClaims = new[]
+            var principal = await signInManager.CreateUserPrincipalAsync(newUser);
+            var identity = (ClaimsIdentity)principal.Identity;
+            identity.AddClaims(new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, newUser.UserName),
                 new Claim("UserId", newUser.Id),
                 new Claim("FullName", $"{newUser.FirstName} {newUser.LastName}"),
-            };
+            });
+
             var token = new JwtSecurityToken(
                 expires: DateTime.UtcNow.AddHours(6),
-                claims: tokenClaims,
+                claims: identity.Claims,
                 signingCredentials: new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256)
                 );
 
