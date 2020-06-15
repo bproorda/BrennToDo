@@ -81,11 +81,11 @@ namespace BrennToDo
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("posts.create",
+                options.AddPolicy("todo.create",
                     policy => policy.RequireClaim("permissions", "create"));
-                options.AddPolicy("posts.update",
+                options.AddPolicy("todo.update",
                     policy => policy.RequireClaim("permissions", "update"));
-                options.AddPolicy("posts.delete",
+                options.AddPolicy("todo.delete",
                     policy => policy.RequireClaim("permissions", "delete"));
             });
         }
