@@ -4,14 +4,16 @@ using BrennToDo.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BrennToDo.Migrations.UserDb
 {
     [DbContext(typeof(UserDbContext))]
-    partial class UserDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200614193030_IdRoleSeedData")]
+    partial class IdRoleSeedData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -94,14 +96,14 @@ namespace BrennToDo.Migrations.UserDb
                         {
                             Id = "bproorda",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "79b76ad0-79fc-4d46-952a-c8c15a4adf1d",
+                            ConcurrencyStamp = "390a1df5-62f1-45f3-95a1-5cf2ee2eca52",
                             Email = "bproorda@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Brenn",
                             LastName = "Roorda",
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "78f42dbd-fc67-4dd8-a83b-61212484e35e",
+                            SecurityStamp = "4f6eee8e-f30c-407c-9084-2367b496d79c",
                             TwoFactorEnabled = false,
                             UserName = "bproorda"
                         });
@@ -179,50 +181,6 @@ namespace BrennToDo.Migrations.UserDb
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetRoleClaims");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ClaimType = "Permissions",
-                            ClaimValue = "delete",
-                            RoleId = "admin"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ClaimType = "Permissions",
-                            ClaimValue = "create",
-                            RoleId = "admin"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            ClaimType = "Permissions",
-                            ClaimValue = "update",
-                            RoleId = "admin"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            ClaimType = "Permissions",
-                            ClaimValue = "update",
-                            RoleId = "editor"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            ClaimType = "Permissions",
-                            ClaimValue = "create",
-                            RoleId = "user"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            ClaimType = "Permissions",
-                            ClaimValue = "update",
-                            RoleId = "user"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>

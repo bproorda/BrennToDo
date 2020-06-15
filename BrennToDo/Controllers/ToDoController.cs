@@ -45,6 +45,7 @@ namespace BrennToDo.Controllers
 
      
         // GET: api/ToDoes/5
+        [Authorize]
         [HttpGet("ById/{id}")]
         public async Task<ActionResult<ToDo>> GetToDoById(long id)
         {
@@ -88,6 +89,7 @@ namespace BrennToDo.Controllers
         // PUT: api/ToDoes/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        [Authorize(Policy ="todo.update")]
         [HttpPut("{assignee}/{id}")]
         public async Task<IActionResult> PutToDo(string assignee, long id, ToDo toDo)
         {
@@ -112,7 +114,7 @@ namespace BrennToDo.Controllers
 
 
         //Refactoring to require a logged in user to post
-        [Authorize]
+        [Authorize(Policy = "todo.create")]
         [HttpPost]
         public async Task<ActionResult<ToDo>> PostToDo([FromBody] ToDo toDo)
         {
@@ -129,8 +131,9 @@ namespace BrennToDo.Controllers
             }
         }
 
-        
+
         // DELETE: api/ToDoes/5
+        [Authorize(Policy = "todo.delete")]
         [HttpDelete("{assignee}/{id}")]
         public async Task<ActionResult<ToDo>> DeleteToDo(string assignee, long id)
         {

@@ -4,14 +4,16 @@ using BrennToDo.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BrennToDo.Migrations.UserDb
 {
     [DbContext(typeof(UserDbContext))]
-    partial class UserDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200614195037_IdRoleClaimSeedData")]
+    partial class IdRoleClaimSeedData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -94,14 +96,14 @@ namespace BrennToDo.Migrations.UserDb
                         {
                             Id = "bproorda",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "79b76ad0-79fc-4d46-952a-c8c15a4adf1d",
+                            ConcurrencyStamp = "2c809159-1113-4287-9fae-53b1e17c5a36",
                             Email = "bproorda@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Brenn",
                             LastName = "Roorda",
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "78f42dbd-fc67-4dd8-a83b-61212484e35e",
+                            SecurityStamp = "4604f576-27ac-47bd-9f9f-c7a222bd117a",
                             TwoFactorEnabled = false,
                             UserName = "bproorda"
                         });

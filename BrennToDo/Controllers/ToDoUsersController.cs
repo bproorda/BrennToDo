@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using static BrennToDo.Models.Identity.UserWithToken;
@@ -23,11 +24,13 @@ namespace BrennToDo.Controllers
     {
         private readonly UserManager<ToDoUser> userManager;
         private readonly IConfiguration configuration;
+        private SignInManager<ToDoUser> signInManager;
 
-        public ToDoUsersController(UserManager<ToDoUser> userManager, IConfiguration configuration)
+        public ToDoUsersController(UserManager<ToDoUser> userManager, SignInManager<ToDoUser> signInManager, IConfiguration configuration)
         {
             this.userManager = userManager;
             this.configuration = configuration;
+            this.signInManager = signInManager; 
         }
 
         [Authorize]
@@ -44,20 +47,25 @@ namespace BrennToDo.Controllers
                 {
                     return Unauthorized();
                 }
-
+                var roles = await userManager.GetRolesAsync(user);
+                bool userIsUser =  await userManager.IsInRoleAsync(user, "User");
+                bool userIsAdmin = await userManager.IsInRoleAsync(user, "Administrator");
+                
                 return Ok(new
                 {
                     UserId = user.Id,
                     user.Email,
                     user.FirstName,
-                    user.LastName
+                    user.LastName,
+                    userIsUser,
+                    userIsAdmin
                 });
             }
 
             return Unauthorized();
         }
 
-
+        
         [HttpPost("Login")]
         public async Task<IActionResult> Login(LoginData data)
         {
@@ -72,15 +80,17 @@ namespace BrennToDo.Controllers
                     return Ok(new UserAndToken
                     {
                         UserId = user.Id,
-                        Token = CreateToken(user)
+                        Token = await CreateToken(user)
                     });
                 }
-
+               
                 await userManager.AccessFailedAsync(user);
             }
             return Unauthorized();
         }
 
+        [AllowAnonymous]
+        [Authorize]
         [HttpPost("Register")]
         public async Task<ActionResult>  Register(RegisterData data)
         {
@@ -89,7 +99,10 @@ namespace BrennToDo.Controllers
                 UserName = data.UserName,
                 FirstName = data.FirstName,
                 LastName = data.LastName,
-                Email = data.Email
+                Email = data.Email,
+                
+                
+                
             };
             var result = await userManager.CreateAsync(newUser, data.Password);
 
@@ -102,32 +115,56 @@ namespace BrennToDo.Controllers
                 });
             }
 
+            // If user is an admin OR there aren't any users
+            // Allow register to include Roles
+            if (User.IsInRole("Administrator") || !await userManager.Users.AnyAsync())
+            {
+                await userManager.AddToRolesAsync(newUser, data.Roles);
+            }
+
             return Ok(new UserAndToken
             {
                 UserId = newUser.Id,
                 //Token = userManager.CreateToken(newUser),
-                Token = CreateToken(newUser)
+                Token =  await CreateToken(newUser)
             });
         }
-        private string /*JwtSecurityToken*/ CreateToken(ToDoUser newUser)
+        private async Task<string> /*JwtSecurityToken*/ CreateToken(ToDoUser newUser)
         {
             var secret = configuration["JWT:Secret"];
             var secretBytes = Encoding.UTF8.GetBytes(secret);
             var signingKey = new SymmetricSecurityKey(secretBytes);
-            var tokenClaims = new[]
+            var principal = await signInManager.CreateUserPrincipalAsync(newUser);
+            var identity = (ClaimsIdentity)principal.Identity;
+            identity.AddClaims(new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, newUser.UserName),
                 new Claim("UserId", newUser.Id),
                 new Claim("FullName", $"{newUser.FirstName} {newUser.LastName}"),
-            };
+            });
+
             var token = new JwtSecurityToken(
                 expires: DateTime.UtcNow.AddHours(6),
-                claims: tokenClaims,
+                claims: identity.Claims,
                 signingCredentials: new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256)
                 );
 
             var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
             return tokenString;
+        }
+        [HttpPost("{username}")]
+        [Authorize(Roles ="Administrator")]
+        public async Task<ActionResult> AddRoleToUser(string username, AddRoleModel data)
+        {
+            var user = await userManager.FindByNameAsync(username);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var userUpdated = await userManager.AddToRoleAsync(user, data.roleId);
+
+            return NoContent();
         }
 
       
