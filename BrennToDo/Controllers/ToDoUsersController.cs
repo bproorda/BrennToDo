@@ -50,6 +50,7 @@ namespace BrennToDo.Controllers
                 var roles = await userManager.GetRolesAsync(user);
                 bool userIsUser =  await userManager.IsInRoleAsync(user, "User");
                 bool userIsAdmin = await userManager.IsInRoleAsync(user, "Administrator");
+                
                 return Ok(new
                 {
                     UserId = user.Id,
@@ -58,8 +59,6 @@ namespace BrennToDo.Controllers
                     user.LastName,
                     userIsUser,
                     userIsAdmin
-                    
-                    
                 });
             }
 
@@ -155,15 +154,15 @@ namespace BrennToDo.Controllers
         }
         [HttpPost("{username}")]
         [Authorize(Roles ="Administrator")]
-        public async Task<ActionResult> AddRoleToUser(string username, string roleId)
+        public async Task<ActionResult> AddRoleToUser(string username, AddRoleModel data)
         {
-            var user = await userManager.FindByNameAsync("username");
+            var user = await userManager.FindByNameAsync(username);
             if (user == null)
             {
                 return NotFound();
             }
 
-            var userUpdated = await userManager.AddToRoleAsync(user, roleId);
+            var userUpdated = await userManager.AddToRoleAsync(user, data.roleId);
 
             return NoContent();
         }
