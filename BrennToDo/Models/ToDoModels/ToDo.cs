@@ -15,6 +15,8 @@ namespace BrennToDo.Models
         public string Assignee { get; set; }
 
         public int Difficulty { get; set; }
+        
+        public bool Completed { get; set; }
 
         public string CreatedByUserId { get; set; }
     }

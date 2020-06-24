@@ -25,7 +25,8 @@ namespace BrennToDo.Data
                     Title = "Walk The Dog",
                     Assignee = "Brenn",
                     Difficulty = 3,
-                    DueDate = new DateTime(2020, 7, 10, 5, 0, 000, DateTimeKind.Utc)
+                    DueDate = new DateTime(2020, 7, 10, 5, 0, 000, DateTimeKind.Utc),
+                    Completed = false
                 },
                 new ToDo {
                 Id = 2,
@@ -33,7 +34,8 @@ namespace BrennToDo.Data
                     Assignee = "Graeme",
                     Difficulty = 5,
                     DueDate = new DateTime(2020, 7, 10, 5, 0, 000, DateTimeKind.Utc),
-                    CreatedByUserId = "7304a689-e2ff-4b12-a49c-103675becb39"
+                    CreatedByUserId = "7304a689-e2ff-4b12-a49c-103675becb39",
+                    Completed = false
                 }
                 );
         }

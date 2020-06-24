@@ -13,6 +13,8 @@ namespace BrennToDo.Models
 
         public int Difficulty { get; set; }
 
+        public bool Completed { get; set; }
+
         public string CreatedBy { get; set; }
     }
 }
