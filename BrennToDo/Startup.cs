@@ -98,6 +98,13 @@ namespace BrennToDo
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors(policy =>
+            {
+                policy.AllowAnyOrigin();
+                policy.AllowAnyHeader();
+                policy.AllowAnyMethod();
+            });
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
